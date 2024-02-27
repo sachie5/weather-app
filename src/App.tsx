@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import "./App.scss";
+import { WeatherType } from "./types/WeatherType";
 
 
 const App = () => {
@@ -8,6 +9,23 @@ const App = () => {
     latitude: 0,
     longitude: 0,
   });
+  const [weatherInfo, setWeatherInfo] = useState<WeatherType>();
+
+  const apiKey = "ab8c7b0bb6b94b90b87155629242702";
+
+  const getWeather = async () => {
+    let url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${userLocation.latitude},${userLocation.longitude}`;
+    const response = await fetch(url);
+    const weatherData = await response.json();
+    setWeatherInfo(weatherData);
+    // SEND REQ IN TS
+    // UPDATE greetings WITH RESPONSE
+  };
+
+  useEffect(() => {
+    getWeather();
+  }, [userLocation])
+
 
   const getUserLocation = () => {
     if (navigator.geolocation) {
@@ -30,56 +48,24 @@ const App = () => {
   }
   }
 
-
-/*   const success = (pos: { coords: any; }) => {
-    var crd = pos.coords;
-    console.log("Your current position is:");
-    console.log(`Latitude : ${crd.latitude}`);
-    console.log(`Longitude: ${crd.longitude}`);
-    console.log(`More or less ${crd.accuracy} meters.`);
-  }
-
-
-  const errors = (err: { code: any; message: any; }) => {
-    console.warn(`ERROR(${err.code}): ${err.message}`);
-  }
-  
-  const options = {
-    enableHighAccuracy: true,
-    timeout: 5000,
-    maximumAge: 0,
-  };
-
-  useEffect(() => {
-    if (navigator.geolocation) {
-        navigator.permissions
-        .query({ name: "geolocation" })
-        .then(function (result) {
-            console.log(result);
-            if (result.state === "granted" || result.state === "prompt") {
-            navigator.geolocation.getCurrentPosition(success, errors, options);
-            } else if (result.state === "denied") {
-            //If denied then you have to show instructions to enable location
-            }
-        });
-    } else {
-        console.log("Geolocation is not supported by this browser.");
-    }
-}, []); */
-
   return (
     <div className="app">
       <h1>Weather app</h1>
-      <h1>Geolocation App</h1>
-      {/* create a button that is mapped to the function which retrieves the users location */}
       <button onClick={getUserLocation}>Get User Location</button>
-      {/* if the user location variable has a value, print the users location */}
-      {userLocation && (
+      {userLocation && weatherInfo && (
+        <><div>
+          <h2>Location Information:</h2>
+          <p>Location: {weatherInfo.location.name}</p>
+          <p>Country: {weatherInfo.location.country}</p>
+          <p> Local time: {weatherInfo.location.localtime}</p>
+        </div>
         <div>
-          <h2>User Location</h2>
-          <p>Latitude: {userLocation.latitude}</p>
-          <p>Longitude: {userLocation.longitude}</p>
-    </div>)}
+            <h2>Weather Information:</h2>
+            <p> Condition: {weatherInfo.current.condition.text}</p>
+            <img src={weatherInfo.current.condition.icon} alt={weatherInfo.current.condition.text}/>
+            <p> Temperature in Celsius: {weatherInfo.current.temp_c}</p>
+            <p> Local time: {weatherInfo.location.localtime}</p>
+          </div></>)}
     </div>
   )
 }
