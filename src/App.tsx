@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import "./App.scss";
 import { WeatherType } from "./types/WeatherType";
 import WeatherTile from "./Components/WeatherTile/WeatherTile";
 import LocationTile from "./Components/LocationTile/LocationTile";
 import Button from "./Components/Button/Button";
 import { Locationtype } from "./types/LocationType";
+import List from "./Components/List/List";
+import ToDoList from "./Components/ToDoList/ToDoList";
 
 const App = () => {
   const [userLocation, setUserLocation] = useState<Locationtype>({
@@ -13,6 +15,10 @@ const App = () => {
   });
   const [weatherInfo, setWeatherInfo] = useState<WeatherType>();
   const [greetingMessage, setGreetingMessage] = useState<string>("");
+  const [entry, setEntry] = useState<string>("");
+  const [items, setItems] = useState<string[]>([]);
+  const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
+
 
   const apiKey = "ab8c7b0bb6b94b90b87155629242702";
 
@@ -27,7 +33,7 @@ const App = () => {
 
   useEffect(() => {
     getWeather();
-  }, [userLocation, greetingMessage]);
+  }, [userLocation, greetingMessage, items, checkedItems]);
 
   const getUserLocation = () => {
     if (navigator.geolocation) {
@@ -68,6 +74,28 @@ const App = () => {
   }
 }
 
+const handleAddItem = () => {
+  const newItem = entry;
+  setItems([...items, newItem]);
+  setCheckedItems([...checkedItems, false])
+  setEntry("");
+};
+
+const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const newItem = event.currentTarget.value;
+  setEntry(newItem);
+}
+
+const handleListItemButtonClick = (id: number) => {
+  setItems(items.filter((_, index) => index !== id));
+  setCheckedItems(checkedItems.filter((_, index) => index !== id));
+  };
+
+  const handleCheckChange = (id: number) => {
+    const updatedCheckState = checkedItems.map((item, index) => index === id ?!item : item);
+    setCheckedItems(updatedCheckState);
+  }
+
 
 
   return (
@@ -89,6 +117,7 @@ const App = () => {
               temp={weatherInfo.current.temp_c}
               time={weatherInfo.location.localtime}
             />
+            <ToDoList items={items} entry={entry} handleListButtonClick={handleAddItem} handleChange={handleChange} handleListItemButtonClick={handleListItemButtonClick} handleCheckChange={handleCheckChange} checkedItems={checkedItems} />
           </>
         )}
       </main>
