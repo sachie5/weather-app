@@ -7,14 +7,17 @@ import Button from "./Components/Button/Button";
 import { Locationtype } from "./types/LocationType";
 
 const App = () => {
-  const [userLocation, setUserLocation] = useState<Locationtype>();
+  const [userLocation, setUserLocation] = useState<Locationtype>({
+    latitude: null,
+    longitude: null
+  });
   const [weatherInfo, setWeatherInfo] = useState<WeatherType>();
   const [greetingMessage, setGreetingMessage] = useState<string>("");
 
   const apiKey = "ab8c7b0bb6b94b90b87155629242702";
 
   const getWeather = async () => {
-    let url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${userLocation.latitude},${userLocation.longitude}`;
+    let url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${userLocation?.latitude},${userLocation?.longitude}`;
     const response = await fetch(url);
     const weatherData = await response.json();
     setWeatherInfo(weatherData);
@@ -48,8 +51,13 @@ const App = () => {
   };
 
   const getTimeOfDay = () => {
-    if(weatherInfo){
-    const time = weatherInfo.location.localtime.slice(-5);
+    let time;  
+
+    weatherInfo
+     ? time = weatherInfo.location.localtime.slice(-5)
+     : "No location found";
+
+    if(time){
       if(time < "12:00"){
         setGreetingMessage("Good Morning. Here's this morning's weather.")
       } else if ("12:00" < time && time <= "18:00"){
@@ -58,9 +66,7 @@ const App = () => {
         setGreetingMessage("Good Night. Here's tonight's weather.");
       }
   }
-  }
-
-  console.log(weatherInfo);
+}
 
 
 
@@ -69,7 +75,7 @@ const App = () => {
       <h1 className="app__heading">Weather app</h1>
       <Button name="Get Weather Information" classname="app__button" onClick={getUserLocation}/>
       <main>
-        {userLocation && weatherInfo && (
+        {greetingMessage && weatherInfo && (
           <>
             <LocationTile
               location={weatherInfo.location.name}
