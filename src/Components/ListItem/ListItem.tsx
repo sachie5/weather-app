@@ -10,7 +10,7 @@ type ListItemProps = {
 
 const ListItem = ({item,  id, handleListItemButtonClick, handleCheckChange, checked}: ListItemProps) => {
     return (
-        <div className="list__item" key={item}>
+        <div className="list__item" key={id}>
             <input className="list__input" type="checkbox" name={item} value={item} onChange={() => handleCheckChange(id)} checked={checked}></input>
             <p className="list__description" id={`${id}`} >{item}</p>
             <button className="list__button" onClick={() => handleListItemButtonClick(id)}>x</button>

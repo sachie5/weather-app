@@ -1,5 +1,6 @@
 import List from "../List/List";
 import Textbox from "../Textbox/Textbox";
+import "./ToDoList.scss";
 import { ChangeEventHandler, MouseEventHandler } from "react";
 
 type ToDoListProps = {
@@ -22,7 +23,7 @@ const ToDoList = ({
   checkedItems,
 }: ToDoListProps) => {
   return (
-    <section className="todo">
+    <section className="todo" id="todo">
       <h1 className="todo__heading">To-Do List</h1>
       <Textbox
         name="todo-list"

@@ -7,6 +7,7 @@ import Button from "./Components/Button/Button";
 import { Locationtype } from "./types/LocationType";
 import List from "./Components/List/List";
 import ToDoList from "./Components/ToDoList/ToDoList";
+import Nav from "./Components/Nav/Nav";
 
 const App = () => {
   const [userLocation, setUserLocation] = useState<Locationtype>({
@@ -100,7 +101,8 @@ const handleListItemButtonClick = (id: number) => {
 
   return (
     <div className="app">
-      <h1 className="app__heading">Weather app</h1>
+      <Nav />
+      <h1 className="app__heading">The Little Helper</h1>
       <Button name="Get Weather Information" classname="app__button" onClick={getUserLocation}/>
       <main>
         {greetingMessage && weatherInfo && (
@@ -117,9 +119,9 @@ const handleListItemButtonClick = (id: number) => {
               temp={weatherInfo.current.temp_c}
               time={weatherInfo.location.localtime}
             />
-            <ToDoList items={items} entry={entry} handleListButtonClick={handleAddItem} handleChange={handleChange} handleListItemButtonClick={handleListItemButtonClick} handleCheckChange={handleCheckChange} checkedItems={checkedItems} />
           </>
         )}
+        <ToDoList items={items} entry={entry} handleListButtonClick={handleAddItem} handleChange={handleChange} handleListItemButtonClick={handleListItemButtonClick} handleCheckChange={handleCheckChange} checkedItems={checkedItems} />
       </main>
     </div>
   );

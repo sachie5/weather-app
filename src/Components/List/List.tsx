@@ -21,7 +21,7 @@ const List = ({
     <div className="list">
       {items.map((item, index) => (
         <ListItem
-          key={item}
+          key={index}
           item={item}
           id={index}
           checked={checked[index]}
