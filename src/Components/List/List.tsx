@@ -3,14 +3,14 @@ import ListItem from "../ListItem/ListItem";
 
 type ListProps = {
   items: string[];
-  handleListItemButtonClick:  (id: number) => void;
+  handleDelete:  (id: number) => void;
   handleCheckChange: (id: number) => void;
   checked: boolean[];
 };
 
 const List = ({
   items,
-  handleListItemButtonClick,
+  handleDelete,
   handleCheckChange,
   checked,
 }: ListProps) => {
@@ -26,7 +26,7 @@ const List = ({
           id={index}
           checked={checked[index]}
           handleCheckChange={handleCheckChange}
-          handleListItemButtonClick={handleListItemButtonClick} 
+          handleDelete={handleDelete} 
          />
       ))}
     </div>

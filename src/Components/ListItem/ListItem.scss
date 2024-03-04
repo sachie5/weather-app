@@ -11,13 +11,17 @@
         align-items: center;
         border-radius: 10px;
         background-color: $color-red;  
-        text-wrap: wrap;
+        white-space: wrap;
         justify-content: space-between;
         color: black;      
     }
 
     &__input{
         margin: 10px;
+    }
+
+    &__input:checked + &__description{
+        text-decoration: line-through;
     }
 
     &__description{

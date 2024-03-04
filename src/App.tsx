@@ -28,13 +28,14 @@ const App = () => {
     const response = await fetch(url);
     const weatherData = await response.json();
     setWeatherInfo(weatherData);
-    // SEND REQ IN TS
-    // UPDATE greetings WITH RESPONSE
   };
 
   useEffect(() => {
     getWeather();
-  }, [userLocation, greetingMessage, items, checkedItems]);
+    getTimeOfDay();
+    console.log(greetingMessage, userLocation);
+  }, [userLocation]);
+
 
   const getUserLocation = () => {
     if (navigator.geolocation) {
@@ -50,9 +51,8 @@ const App = () => {
           console.error("Error getting user location:", error);
         }
       );
-      getTimeOfDay();
     } else {
-      // display an error if not supported
+      // error if not supported
       console.error("Geolocation is not supported by this browser.");
     }
   };
@@ -66,11 +66,13 @@ const App = () => {
 
     if(time){
       if(time < "12:00"){
-        setGreetingMessage("Good Morning. Here's this morning's weather.")
+        setGreetingMessage(`Good Morning. Here's this morning's weather.`)
       } else if ("12:00" < time && time <= "18:00"){
-        setGreetingMessage("Good Afternoon. Here's this afternoon's weather.");
-      } else {
-        setGreetingMessage("Good Night. Here's tonight's weather.");
+        setGreetingMessage(`Good Afternoon. Here's this afternoon's weather.`);
+      } else if ("18:00" < time && time <= "21:00"){
+        setGreetingMessage(`Good Evening. Here's this evening's weather.`);
+      }else {
+        setGreetingMessage(`Good Night.\nHere's tonight's weather.`);
       }
   }
 }
@@ -87,7 +89,7 @@ const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
   setEntry(newItem);
 }
 
-const handleListItemButtonClick = (id: number) => {
+const handleDelete = (id: number) => {
   setItems(items.filter((_, index) => index !== id));
   setCheckedItems(checkedItems.filter((_, index) => index !== id));
   };
@@ -121,7 +123,7 @@ const handleListItemButtonClick = (id: number) => {
             />
           </>
         )}
-        <ToDoList items={items} entry={entry} handleListButtonClick={handleAddItem} handleChange={handleChange} handleListItemButtonClick={handleListItemButtonClick} handleCheckChange={handleCheckChange} checkedItems={checkedItems} />
+        <ToDoList items={items} entry={entry} handleAddItem={handleAddItem} handleChange={handleChange} handleDelete={handleDelete} handleCheckChange={handleCheckChange} checkedItems={checkedItems} />
       </main>
     </div>
   );

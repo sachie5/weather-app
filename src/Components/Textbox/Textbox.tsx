@@ -6,7 +6,7 @@ type TextboxProps = {
   placeholder: string;
   entry: string;
   handleChange: ChangeEventHandler<HTMLInputElement>;
-  handleListButtonClick: MouseEventHandler<HTMLButtonElement>;
+  handleAddItem: MouseEventHandler<HTMLButtonElement>;
 };
 
 const Textbox = ({
@@ -14,7 +14,7 @@ const Textbox = ({
   placeholder,
   entry,
   handleChange,
-  handleListButtonClick,
+  handleAddItem,
 }: TextboxProps) => {
   return (
     <div className="items">
@@ -26,7 +26,7 @@ const Textbox = ({
         value={entry}
         onChange={handleChange}
       ></input>
-      <button className="items__button" onClick={handleListButtonClick}>
+      <button className="items__button" onClick={handleAddItem}>
         +
       </button>
     </div>

@@ -6,8 +6,8 @@ import { ChangeEventHandler, MouseEventHandler } from "react";
 type ToDoListProps = {
   entry: string;
   items: string[];
-  handleListButtonClick: MouseEventHandler<HTMLButtonElement>;
-  handleListItemButtonClick: (id: number) => void;
+  handleAddItem: MouseEventHandler<HTMLButtonElement>;
+  handleDelete: (id: number) => void;
   handleChange: ChangeEventHandler<HTMLInputElement>;
   handleCheckChange: (id: number) => void;
   checkedItems: boolean[];
@@ -16,8 +16,8 @@ type ToDoListProps = {
 const ToDoList = ({
   entry,
   items,
-  handleListButtonClick,
-  handleListItemButtonClick,
+  handleAddItem,
+  handleDelete,
   handleChange,
   handleCheckChange,
   checkedItems,
@@ -29,12 +29,12 @@ const ToDoList = ({
         name="todo-list"
         placeholder="Add your task here..."
         entry={entry}
-        handleListButtonClick={handleListButtonClick}
+        handleAddItem={handleAddItem}
         handleChange={handleChange}
       />
       <List
         items={items}
-        handleListItemButtonClick={handleListItemButtonClick}
+        handleDelete={handleDelete}
         handleCheckChange={handleCheckChange}
         checked={checkedItems}
       />
