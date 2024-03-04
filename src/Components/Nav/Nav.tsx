@@ -1,10 +1,6 @@
 import Button from "../Button/Button";
 import "./Nav.scss";
 
-type NavProps = {
-
-}
-
 const Nav = ({}) => {
     return (
         <nav className="nav">

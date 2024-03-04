@@ -5,7 +5,6 @@ import WeatherTile from "./Components/WeatherTile/WeatherTile";
 import LocationTile from "./Components/LocationTile/LocationTile";
 import Button from "./Components/Button/Button";
 import { Locationtype } from "./types/LocationType";
-import List from "./Components/List/List";
 import ToDoList from "./Components/ToDoList/ToDoList";
 import Nav from "./Components/Nav/Nav";
 
@@ -21,22 +20,32 @@ const App = () => {
   const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
 
 
-  const apiKey = "ab8c7b0bb6b94b90b87155629242702";
+  const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 
   const getWeather = async () => {
-    let url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${userLocation?.latitude},${userLocation?.longitude}`;
+    try {
+    let url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${userLocation?.latitude},${userLocation?.longitude}`;
     const response = await fetch(url);
+    console.log(url);
     const weatherData = await response.json();
     setWeatherInfo(weatherData);
+    getTimeOfDay();
+    } catch (error){
+      if (error instanceof TypeError && error.message.includes("Failed to fetch")) {
+        console.error('Network error:', error);
+      } else {
+        console.error('Error fetching weather data:', error);
+      }
+    }
   };
 
   useEffect(() => {
     getWeather();
-    getTimeOfDay();
+    console.log(weatherInfo)
   }, [userLocation]);
 
 
-  const getUserLocation = () => {
+  const getUserLocation = async () => {
     if (navigator.geolocation) {
       // what to do if supported
       navigator.geolocation.getCurrentPosition(
