@@ -33,7 +33,6 @@ const App = () => {
   useEffect(() => {
     getWeather();
     getTimeOfDay();
-    console.log(greetingMessage, userLocation);
   }, [userLocation]);
 
 
