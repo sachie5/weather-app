@@ -6,17 +6,15 @@ import LocationTile from "./Components/LocationTile/LocationTile";
 import { Locationtype } from "./types/LocationType";
 import ToDoList from "./Components/ToDoList/ToDoList";
 import Nav from "./Components/Nav/Nav";
-import MapsTile from "./Components/MapsTile/MapsTile";
-import Button from "./Components/Button/Button";
+import MapsTile from "./Components/MapsTile/MapTile";
 import WeeklyForecastContainer from "./Components/WeeklyForecastContainer/WeeklyForecastContainer";
 import NewsTileContainer from "./Components/NewsTileContainer/NewsTileContainer";
 import { News } from "./types/NewsType";
 
 const App = () => {
-  const [city, setCity] = useState<string>("London");
   const [userLocation, setUserLocation] = useState<Locationtype>({
     latitude: 0,
-    longitude: 0
+    longitude: 0,
   });
   const [weatherInfo, setWeatherInfo] = useState<WeatherType>();
   const [newsInfo, setNewsInfo] = useState<News | null>(null);
@@ -44,53 +42,61 @@ const App = () => {
         console.error("Error fetching weather data:", error);
       }
     }
-  }
+  };
 
   const getNews = async () => {
     let url = `https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=${newsKey}`;
     const response = await fetch(url);
     const newsData = await response.json();
     setNewsInfo(newsData);
-
-  }
+  };
 
   useEffect(() => {
-       getForecastWeather(); 
+    getForecastWeather();
   }, [userLocation]);
 
   useEffect(() => {
-/*        getNews(); */
-getUserLocation();  
+    getUserLocation();
+    if (weatherInfo) {
+      getTimeOfDay();
+  }
   }, []);
+
+  useEffect(() => {
+    if (weatherInfo) {
+      getTimeOfDay();
+  }
+  }, [weatherInfo]);
 
   const getUserLocation = async () => {
     if (navigator.geolocation) {
       navigator.permissions
         .query({ name: "geolocation" })
-        .then((permissionStatus) => {
-          permissionStatus.onchange = () => {
-            console.log('Permission status changed to ' + permissionStatus.state);
-          };
-
-          if (permissionStatus.state === "granted" || permissionStatus.state === "prompt") {
+        .then(function (result) {
+          console.log(result);
+          if (result.state === "granted" || result.state === "prompt") {
             navigator.geolocation.getCurrentPosition(
               (position) => {
                 // have position
                 const { latitude, longitude } = position.coords;
                 setUserLocation({ latitude, longitude });
-                getTimeOfDay();
               },
               (error) => {
                 // display an error
                 console.error("Error getting user location:", error);
               }
             );
-          } else if (permissionStatus.state === "denied") {
+            getTimeOfDay();
+
+          } else if (result.state === "denied") {
             console.log("Permission denied.");
           }
         });
+    } else {
+      // error if not supported
+      console.error("Geolocation is not supported by this browser.");
     }
-  }; 
+  };
 
   const getTimeOfDay = () => {
     let time;
@@ -113,7 +119,6 @@ getUserLocation();
       }
     }
   };
-
 
   const handleAddItem = () => {
     const newItem = entry;
@@ -143,7 +148,7 @@ getUserLocation();
     <div className="app">
       <Nav />
       <h1 className="app__heading">The Little Helper</h1>
-  {/*     <Button name="Get Weather Information" classname="app__button" onClick={getUserLocation}/>   */}
+      {/*     <Button name="Get Weather Information" classname="app__button" onClick={getUserLocation}/>   */}
       <h1 className="greeting">{greetingMessage}</h1>
       <main>
         {weatherInfo && (
@@ -161,20 +166,24 @@ getUserLocation();
                 time={weatherInfo.location.localtime}
               />
             </section>
-            <WeeklyForecastContainer classname={"forecast"} weatherInfo={weatherInfo} />
+            <WeeklyForecastContainer
+              classname={"forecast"}
+              weatherInfo={weatherInfo}
+            />
             <MapsTile
               latitude={userLocation.latitude}
-              longitude={userLocation.longitude} location={userLocation} newsKey={newsKey}        /> 
-        <NewsTileContainer classname={"news"} news={newsInfo} />
-        <ToDoList
-          items={items}
-          entry={entry}
-          handleAddItem={handleAddItem}
-          handleChange={handleChange}
-          handleDelete={handleDelete}
-          handleCheckChange={handleCheckChange}
-          checkedItems={checkedItems}
-        />
+              longitude={userLocation.longitude}
+            />
+            <NewsTileContainer classname={"news"} news={newsInfo} />
+            <ToDoList
+              items={items}
+              entry={entry}
+              handleAddItem={handleAddItem}
+              handleChange={handleChange}
+              handleDelete={handleDelete}
+              handleCheckChange={handleCheckChange}
+              checkedItems={checkedItems}
+            />
           </>
         )}
       </main>
