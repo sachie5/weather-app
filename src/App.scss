@@ -28,7 +28,19 @@
         margin: 10px;
     }
 }
+
+main{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .greeting{
     font-family: var(--font);
     text-align: center;
+}
+
+.weather-info{
+    display: flex;
+    justify-content: center;
 }

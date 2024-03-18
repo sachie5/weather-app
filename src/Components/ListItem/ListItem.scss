@@ -7,10 +7,10 @@
         border: 2px solid black;
         margin: 10px 0;
         height: 60px;
-        width: 250px;
+        width: 400px;
         align-items: center;
         border-radius: 10px;
-        background-color: $color-red;  
+        background-color: #B22222;  
         white-space: wrap;
         justify-content: space-between;
         color: black;      
@@ -25,7 +25,7 @@
     }
 
     &__description{
-        font-size: 1.1rem;
+        font-size: 1.3rem;
         text-align: center;
     }
 

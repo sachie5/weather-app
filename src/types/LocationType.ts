@@ -1,4 +1,4 @@
 export type Locationtype = {
-    latitude: number | null,
-    longitude: number | null
+    latitude: number,
+    longitude: number
 }

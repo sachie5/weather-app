@@ -6,9 +6,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-around;
     background-color: $color-blue;
     color: $color-white;
     border-radius: 10px;
+    width: 20rem;
     
     &__heading{
         text-decoration: underline;

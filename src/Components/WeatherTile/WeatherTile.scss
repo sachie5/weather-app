@@ -10,6 +10,8 @@
     color: $color-white;
     border-radius: 10px;
     background-color: $color-navy;
+    width: 20rem;
+    justify-content: space-around;
 
     &__heading{
         text-decoration: underline;
