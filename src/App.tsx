@@ -10,13 +10,14 @@ import MapsTile from "./Components/MapsTile/MapTile";
 import WeeklyForecastContainer from "./Components/WeeklyForecastContainer/WeeklyForecastContainer";
 import NewsTileContainer from "./Components/NewsTileContainer/NewsTileContainer";
 import { News } from "./types/NewsType";
+import Button from "./Components/Button/Button";
 
 const App = () => {
   const [userLocation, setUserLocation] = useState<Locationtype>({
     latitude: 0,
     longitude: 0,
   });
-  const [weatherInfo, setWeatherInfo] = useState<WeatherType>();
+  const [weatherInfo, setWeatherInfo] = useState<WeatherType | null>(null);
   const [newsInfo, setNewsInfo] = useState<News | null>(null);
   const [greetingMessage, setGreetingMessage] = useState<string>("");
   const [entry, setEntry] = useState<string>("");
@@ -56,16 +57,15 @@ const App = () => {
   }, [userLocation]);
 
   useEffect(() => {
-    getUserLocation();
     if (weatherInfo) {
       getTimeOfDay();
-  }
+    }
   }, []);
 
   useEffect(() => {
     if (weatherInfo) {
       getTimeOfDay();
-  }
+    }
   }, [weatherInfo]);
 
   const getUserLocation = async () => {
@@ -86,8 +86,6 @@ const App = () => {
                 console.error("Error getting user location:", error);
               }
             );
-            getTimeOfDay();
-
           } else if (result.state === "denied") {
             console.log("Permission denied.");
           }
@@ -101,7 +99,7 @@ const App = () => {
   const getTimeOfDay = () => {
     let time;
 
-    weatherInfo
+    userLocation && weatherInfo
       ? (time = weatherInfo.location.localtime.slice(-5))
       : "No location found";
 
@@ -147,13 +145,15 @@ const App = () => {
   return (
     <div className="app">
       <Nav />
-      <h1 className="app__heading">The Little Helper</h1>
-      {/*     <Button name="Get Weather Information" classname="app__button" onClick={getUserLocation}/>   */}
-      <h1 className="greeting">{greetingMessage}</h1>
       <main>
-        {weatherInfo && (
+        <div className="app__heading">
+          <h1 className="app__heading--title">The Little Helper</h1>
+          <h2 className="app__heading--greeting">{greetingMessage}</h2>
+        </div>
+        {weatherInfo &&  (
           <>
             <section className="weather-info">
+            <Button name="Get Weather Information" classname="app__button" onClick={getUserLocation}/>
               <LocationTile
                 location={weatherInfo.location.name}
                 country={weatherInfo.location.country}
@@ -164,16 +164,16 @@ const App = () => {
                 weatherImage={weatherInfo.current.condition.icon}
                 temp={weatherInfo.current.temp_c}
                 time={weatherInfo.location.localtime}
-              />
-            </section>
-            <WeeklyForecastContainer
+              />       
+              <WeeklyForecastContainer
               classname={"forecast"}
               weatherInfo={weatherInfo}
             />
-            <MapsTile
+            </section>
+            {/*             <MapsTile
               latitude={userLocation.latitude}
               longitude={userLocation.longitude}
-            />
+            /> */}
             <NewsTileContainer classname={"news"} news={newsInfo} />
             <ToDoList
               items={items}
