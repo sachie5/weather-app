@@ -29,10 +29,11 @@ const App = () => {
 
   const getForecastWeather = async () => {
     try {
-      let url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${userLocation.latitude},${userLocation.longitude}&days=7`;
+      let url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${userLocation.latitude},${userLocation.longitude}&days=5`;
       const response = await fetch(url);
       const weatherData = await response.json();
       setWeatherInfo(weatherData);
+      console.log(userLocation)
     } catch (error) {
       if (
         error instanceof TypeError &&
